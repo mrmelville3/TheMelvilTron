@@ -23,7 +23,7 @@ export default function MyGraph2({ xMin, xMax, yMin, yMax, graphDataSets, uid }:
         return -(100 * (y - yMin) / (yMax - yMin)) + 50;
     }
 
-    let spacers = [];
+    const spacers = [];
     for(let i=0;i<20;i++){
         spacers[i] = -50 + 5 * i ;
     }

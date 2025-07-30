@@ -10,8 +10,8 @@ import PageHeading from "@/components/PageHeading";
 export default function Page() {
 
     const numberOfPoints = 100;
-    const pointValues: number[][] = [];
-    const mseValues: number[][] = [];
+    // const pointValues: number[][] = [];
+    // const mseValues: number[][] = [];
     
     const [slope, setSlope] = useState([1.0]);
     const [noise, setNoise] = useState([10.0]);
@@ -24,12 +24,12 @@ export default function Page() {
         // Optionally, add slope and noise as dependencies if you want to re-plot when they change
     }, []);
 
-    let NoisyGraphDataSets: GraphData[] = [];
+    const NoisyGraphDataSets: GraphData[] = [];
     const noisyPoints = new GraphData();
     const trueLine = new GraphData();
     const learnedSlope = new GraphData();
 
-    let LinearRegressionSets: GraphData[] = [];
+    const LinearRegressionSets: GraphData[] = [];
     const mse = new GraphData();
     const msePrime = new GraphData();
     const learnedSlopeVertical = new GraphData();
