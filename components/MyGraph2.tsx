@@ -14,7 +14,7 @@ export default function MyGraph2({ xMin, xMax, yMin, yMax, graphDataSets, uid }:
 
     const xAxis = 50 - (100 * (0 - yMin) / (yMax - yMin));
     const yAxis = -50 + (100 * (0 - xMin) / (xMax - xMin));
-    // const xScale = (xMax - xMin) / 20;
+    const legendFont = 4;
 
     function moveX(x: number): number {
         return (100 * (x - xMin) / (xMax - xMin)) - 50;
@@ -31,7 +31,7 @@ export default function MyGraph2({ xMin, xMax, yMin, yMax, graphDataSets, uid }:
     //const pointString = data.map(([x, y]) => `${moveX(x)},${moveY(y)}`).join(' ');
 
     return (
-        <div className="border">
+        <div>
             <svg className="border" 
                 viewBox="-50 -50 100 100"
                 xmlns="http://www.w3.org/2000/svg"
@@ -65,7 +65,7 @@ export default function MyGraph2({ xMin, xMax, yMin, yMax, graphDataSets, uid }:
                     ))
                 }
                 { (graphDataSets.length > 0) ?
-                <rect x={-48} y={-46} width={32} height={10} fill="white" stroke="black" strokeWidth="0.1" />
+                <rect x={-48} y={-46} width={46} height={legendFont*(graphDataSets.length+1)} fill="white" stroke="black" strokeWidth="0.1" />
                 : <circle cx={0} cy={0} r="1.0" fill="limegreen">
                     <animate
                         attributeName="opacity"
@@ -86,11 +86,11 @@ export default function MyGraph2({ xMin, xMax, yMin, yMax, graphDataSets, uid }:
                 {
                     graphDataSets.map((graphData, index) => (
                         <React.Fragment key={`fragment3-${index}-${uid}`}>
-                            <text key={`legendLabel-${index}-${uid}`} x={-47} y={-43 + (index * 3)} textAnchor="start" fill="black" fontSize="2.75">{graphData.label}</text>
+                            <text key={`legendLabel-${index}-${uid}`} x={-16} y={-42 + (index * (legendFont+1))} textAnchor="end" fill="black" fontSize="4">{graphData.label}</text>
                             {
                             graphData.displayType === "points" ?                             
-                                <circle id={`legendDot-${index}-${uid}`} key={`legendDot-${index}-${uid}`} cx={-22.5} cy={-44 + (index * 3)} r="0.8" fill={graphData.color} />
-                                :<line id={`legendLine-${index}-${uid}`} key={`legendLine-${index}-${uid}`} x1={-26} y1={-44 + (index * 3)} x2={-19} y2={-44 + (index * 3)} stroke={graphData.color} strokeWidth="0.5" strokeDasharray={graphData.displayType === "dashed-line" ? "1,1" : undefined} />
+                                <circle id={`legendDot-${index}-${uid}`} key={`legendDot-${index}-${uid}`} cx={-10} cy={-43 + (index * (legendFont+1))} r="0.8" fill={graphData.color} />
+                                :<line id={`legendLine-${index}-${uid}`} key={`legendLine-${index}-${uid}`} x1={-14} y1={-43 + (index * (legendFont+1))} x2={-5} y2={-43 + (index * (legendFont+1))} stroke={graphData.color} strokeWidth="0.5" strokeDasharray={graphData.displayType === "dashed-line" ? "1,1" : undefined} />
                             }
                         </React.Fragment>
                     ))

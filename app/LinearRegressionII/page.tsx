@@ -6,23 +6,40 @@ import MyGraph2 from "@/components/MyGraph2";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import PageHeading from "@/components/PageHeading";
+import SectionHeading from "@/components/SectionHeading";
 
 export default function Page() {
 
     const numberOfPoints = 100;
-    // const pointValues: number[][] = [];
-    // const mseValues: number[][] = [];
     
     const [slope, setSlope] = useState([1.0]);
     const [noise, setNoise] = useState([10.0]);
     const [estimatedSlopeCoefficient, setEstimatedSlopeCoefficient] = useState(1.0);
     const [noisyGraphData, setNoisyGraphData] = useState<GraphData[]>([]);
     const [linearRegressionGraphData, setLinearRegressionGraphData] = useState<GraphData[]>([]);
+    const [orientation, setOrientation] = useState<string | null>(null);
 
     useEffect(() => {
+        
         plotAll();
-        // Optionally, add slope and noise as dependencies if you want to re-plot when they change
     }, []);
+
+    useEffect(() => {
+        const getOrientation = () => {
+        const type = window.screen.orientation?.type || 'unknown';
+        setOrientation(type);
+        };
+
+    getOrientation();
+
+    // Optionally, listen for changes
+    window.screen.orientation?.addEventListener('change', getOrientation);
+
+    return () => {
+      window.screen.orientation?.removeEventListener('change', getOrientation);
+    };
+  }, []); 
+
 
     const NoisyGraphDataSets: GraphData[] = [];
     const noisyPoints = new GraphData();
@@ -34,13 +51,10 @@ export default function Page() {
     const msePrime = new GraphData();
     const learnedSlopeVertical = new GraphData();
 
-
-
     noisyPoints.label = "Noisy Data";
     noisyPoints.displayType = "points";
     noisyPoints.color = "limegreen";
     NoisyGraphDataSets.push(noisyPoints);
-    
 
     trueLine.label = "True Line";
     trueLine.displayType = "line";
@@ -52,7 +66,7 @@ export default function Page() {
     learnedSlope.color = "red";
     NoisyGraphDataSets.push(learnedSlope);
 
-    mse.label = "MSE";
+    mse.label = "Mean Squared Err.";
     mse.displayType = "line";
     mse.color = "purple";
     LinearRegressionSets.push(mse);
@@ -83,6 +97,7 @@ export default function Page() {
 
     function plotAll() {
         // true line
+
         trueLine.points = [{x: -50, y: slope[0] * -50}, {x: 50, y: slope[0] * 50}];
 
         // noisy points
@@ -141,11 +156,14 @@ export default function Page() {
 
 
     return (
-        <div>
+        <div className=" md:w-3/4 mx-auto">
             <PageHeading title="Linear Regression" />
-            <div className="inline-grid grid-cols-12 gap-2  md:mx-40">
+            <div className="inline-grid grid-cols-12 gap-4 m-2">
+                { orientation?.includes('portrait') ? 
+                 null: (
+                <>
                 <div className="col-span-1 h-1/2">
-                    <Label className="mb-2 justify-self-center">Slope (true line)</Label>
+                    <Label className="mb-2 justify-self-center">True Slope</Label>
                     <Label className="mb-2 justify-self-center">{slope}</Label>
                     <Slider 
                         orientation="vertical"
@@ -168,7 +186,8 @@ export default function Page() {
                         onValueChange={handleNoiseChange} 
                         value={noise} />
                 </div>
-                <div className="col-span-5">
+                </>)}
+                <div className={orientation?.includes('portrait') ? "col-span-6": "col-span-5"}>
                     <MyGraph2 
                         xMin={-50} 
                         xMax={50} 
@@ -178,12 +197,48 @@ export default function Page() {
                         uid='1' 
                         />
                 </div>
-                <div className="col-span-5">
+                <div className={orientation?.includes('portrait') ? "col-span-6": "col-span-5"}>
                     <MyGraph2 xMin={-0.5} xMax={3.0} yMin={-50} yMax={500} graphDataSets={linearRegressionGraphData} uid='2' />
                     <div>
                         <Label className="m-2 justify-self-center">Estimated Slope Coefficient {estimatedSlopeCoefficient.toFixed(2)}</Label>
                     </div>
                 </div>
+            </div>
+                { orientation?.includes('portrait') ? (
+                <>
+                <div className="col-span-1 h-1/2">
+                    <Label className="mb-2 justify-self-center">True Slope {slope}</Label>
+                    <Slider 
+                        className="mb-4"
+                        orientation="horizontal"
+                        defaultValue={[1.0]} 
+                        min={-5.0} 
+                        max={5.0} 
+                        step={0.1} 
+                        onValueChange={handleSlopeChange} 
+                        value={slope} />
+                </div>
+                <div className="col-span-1 h-1/2">
+                    <Label className="mb-2 justify-self-center">Noise Factor {noise}</Label>
+                    <Slider 
+                        className="mb-4"
+                        orientation="horizontal"
+                        defaultValue={[10.0]} 
+                        min={0.0} 
+                        max={30.0} 
+                        step={1} 
+                        onValueChange={handleNoiseChange} 
+                        value={noise} />
+                </div>
+                </>) : null}
+                <div className="col-span-12 my-4">
+                    <SectionHeading title="What's Going On Here?" />
+                    <p className="px-8 xl:px-24">
+                    Linear regression is a simple form of machine learning. In this example you can use the slider controls to define the true line (blue) and the noise factor. Based on those inputs, the noisy data points are generated (the green dots). The learning algorithm calculates the trend line (red dashed line) based only on the green dots. Basically, the trend line is “learned” from the training data. This means that if we are given a value of x that was not in the training data, we can use the learned trend line to predict the expected value of y and produce a new point at (x, y) on the graph. 
+                    </p>
+                    <p className="my-4 px-8 xl:px-24">
+    The graph on the right reveals more detail on how the trend line is learned. The U-shaped line represents how far off hypothetical trend lines are at different slopes. The bottom of the U is where the error is the least. The X coordinate at that point on the U-shaped graph is the best possible trend line slope for the training data provided. The straight yellow line is the derivative of the U-shaped error graph. It crosses the X axis where the slope of the U-shaped graph is zero.  
+                    </p>
             </div>
         </div>
     )
