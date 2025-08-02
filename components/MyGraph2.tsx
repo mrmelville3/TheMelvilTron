@@ -86,11 +86,11 @@ export default function MyGraph2({ xMin, xMax, yMin, yMax, graphDataSets, uid }:
                 {
                     graphDataSets.map((graphData, index) => (
                         <React.Fragment key={`fragment3-${index}-${uid}`}>
-                            <text key={`legendLabel-${index}-${uid}`} x={-16} y={-42 + (index * (legendFont+1))} textAnchor="end" fill="black" fontSize="4">{graphData.label}</text>
+                            <text key={`legendLabel-${index}-${uid}`} x={-14} y={-42 + (index * (legendFont+1))} textAnchor="end" fill="black" fontSize="4">{graphData.label}</text>
                             {
                             graphData.displayType === "points" ?                             
-                                <circle id={`legendDot-${index}-${uid}`} key={`legendDot-${index}-${uid}`} cx={-10} cy={-43 + (index * (legendFont+1))} r="0.8" fill={graphData.color} />
-                                :<line id={`legendLine-${index}-${uid}`} key={`legendLine-${index}-${uid}`} x1={-14} y1={-43 + (index * (legendFont+1))} x2={-5} y2={-43 + (index * (legendFont+1))} stroke={graphData.color} strokeWidth="0.5" strokeDasharray={graphData.displayType === "dashed-line" ? "1,1" : undefined} />
+                                <circle id={`legendDot-${index}-${uid}`} key={`legendDot-${index}-${uid}`} cx={-8} cy={-43 + (index * (legendFont+1))} r="0.8" fill={graphData.color} />
+                                :<line id={`legendLine-${index}-${uid}`} key={`legendLine-${index}-${uid}`} x1={-12} y1={-43 + (index * (legendFont+1))} x2={-3} y2={-43 + (index * (legendFont+1))} stroke={graphData.color} strokeWidth="0.5" strokeDasharray={graphData.displayType === "dashed-line" ? "1,1" : undefined} />
                             }
                         </React.Fragment>
                     ))

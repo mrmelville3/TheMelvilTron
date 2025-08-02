@@ -51,17 +51,17 @@ export default function Page() {
     const msePrime = new GraphData();
     const learnedSlopeVertical = new GraphData();
 
-    noisyPoints.label = "Noisy Data";
+    noisyPoints.label = "Noisy Data Points";
     noisyPoints.displayType = "points";
     noisyPoints.color = "limegreen";
     NoisyGraphDataSets.push(noisyPoints);
 
-    trueLine.label = "True Line";
+    trueLine.label = "True Trend Line";
     trueLine.displayType = "line";
     trueLine.color = "blue";
     NoisyGraphDataSets.push(trueLine);
         
-    learnedSlope.label = "Learned Slope";
+    learnedSlope.label = "Learned Trend Line";
     learnedSlope.displayType = "dashed-line";
     learnedSlope.color = "red";
     NoisyGraphDataSets.push(learnedSlope);
@@ -76,7 +76,7 @@ export default function Page() {
     msePrime.color = "orange";
     LinearRegressionSets.push(msePrime);
 
-    learnedSlopeVertical.label = "Est. Slope";
+    learnedSlopeVertical.label = "Learned Slope";
     learnedSlopeVertical.displayType = "dashed-line";  
     learnedSlopeVertical.color = "red";
     LinearRegressionSets.push(learnedSlopeVertical);
@@ -196,20 +196,23 @@ export default function Page() {
                         graphDataSets={noisyGraphData} 
                         uid='1' 
                         />
+                    <div>
+                        <Label className="m-2 justify-self-center">True Slope {slope[0].toFixed(2)}</Label>
+                    </div>
                 </div>
                 <div className={orientation?.includes('portrait') ? "col-span-6": "col-span-5"}>
                     <MyGraph2 xMin={-0.5} xMax={3.0} yMin={-50} yMax={500} graphDataSets={linearRegressionGraphData} uid='2' />
                     <div>
-                        <Label className="m-2 justify-self-center">Estimated Slope Coefficient {estimatedSlopeCoefficient.toFixed(2)}</Label>
+                        <Label className="m-2 justify-self-center">Learned Slope {estimatedSlopeCoefficient.toFixed(2)}</Label>
                     </div>
                 </div>
             </div>
                 { orientation?.includes('portrait') ? (
                 <>
-                <div className="col-span-1 h-1/2">
+                <div className="col-span-1">
                     <Label className="mb-2 justify-self-center">True Slope {slope}</Label>
                     <Slider 
-                        className="mb-4"
+                        className="mb-4 w-3/4 mx-auto"
                         orientation="horizontal"
                         defaultValue={[1.0]} 
                         min={-5.0} 
@@ -218,10 +221,10 @@ export default function Page() {
                         onValueChange={handleSlopeChange} 
                         value={slope} />
                 </div>
-                <div className="col-span-1 h-1/2">
+                <div className="col-span-1">
                     <Label className="mb-2 justify-self-center">Noise Factor {noise}</Label>
                     <Slider 
-                        className="mb-4"
+                        className="mb-4 w-3/4 mx-auto"
                         orientation="horizontal"
                         defaultValue={[10.0]} 
                         min={0.0} 
@@ -231,14 +234,17 @@ export default function Page() {
                         value={noise} />
                 </div>
                 </>) : null}
-                <div className="col-span-12 my-4">
-                    <SectionHeading title="What's Going On Here?" />
-                    <p className="px-8 xl:px-24">
-                    Linear regression is a simple form of machine learning. In this example you can use the slider controls to define the true line (blue) and the noise factor. Based on those inputs, the noisy data points are generated (the green dots). The learning algorithm calculates the trend line (red dashed line) based only on the green dots. Basically, the trend line is “learned” from the training data. This means that if we are given a value of x that was not in the training data, we can use the learned trend line to predict the expected value of y and produce a new point at (x, y) on the graph. 
-                    </p>
-                    <p className="my-4 px-8 xl:px-24">
-    The graph on the right reveals more detail on how the trend line is learned. The U-shaped line represents how far off hypothetical trend lines are at different slopes. The bottom of the U is where the error is the least. The X coordinate at that point on the U-shaped graph is the best possible trend line slope for the training data provided. The straight yellow line is the derivative of the U-shaped error graph. It crosses the X axis where the slope of the U-shaped graph is zero.  
-                    </p>
+                <div className="col-span-12 my-4 py-4">
+                    <SectionHeading title="What's Going On Here?" description="Let's hit the slopes..."/>
+                    <div className="px-8 xl:px-24 font-bold">The basic idea (graph on the left):</div>
+                    <p className="px-8 py-2 xl:px-24">
+You (the user) set the blue true trend line using the first slider. You set the noise level of the green data points with second slider. The learning algorithm takes the green dots as input and is not aware of the blue line. The output of the learning algorithm is the red dashed line. This is the algorithm&quot;s best guess at what the blue line is. The value of &quot;learned Slope&quot; on the right should be close to &quot;True Line Slope&quot; on the left. It has also learned the trend line of the data so it “knows” where new data points should go.  </p>
+                    <div className="px-8 xl:px-24 font-bold">Let&quot;s get nerdy:</div>
+                    <p className="px-8 py-2 xl:px-24">
+Each green dot is a point with coordinates x and y. These points are the training data. The learning algorithm is designed around this notion: “If I am given x as input, then y is the correct output.” The algorithm takes this set of known x&quot;s and y&quot;s and finds the trend line slope that best approximates the linear trend of the training data. With the trend identified, we can predict a likely value of y for an x we&quot;ve never seen before. The machine learned!</p>
+                    <div className="px-8 xl:px-24 font-bold">Next level nerds only:</div>
+                    <p className="px-8 py-2 xl:px-24">
+The graph on the right reveals more detail on how the trend line is learned. The purple U-shaped graph is a parabola. It represents how far hypothetical trend lines are from the data points for a range of slopes. The formula for that graph is called mean squared error (MSE). The error is the smallest at the bottom of the U-shape graph where the slope is zero. The straight yellow line is the derivative of the MSE parabola. It is called MSE Prime in this example. If you set MSE Prime equal to zero and solve for x, you will have the estimated slope coefficient. That is the slope of the learned trend line.</p>
             </div>
         </div>
     )
