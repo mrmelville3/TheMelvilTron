@@ -19,6 +19,17 @@ export default function Page() {
     const [linearRegressionGraphData, setLinearRegressionGraphData] = useState<GraphData[]>([]);
     const [orientation, setOrientation] = useState<string | null>(null);
 
+
+    useEffect(() => {
+    // This runs AFTER slope updates
+        plotAll();
+    }, [slope]);
+
+    useEffect(() => {
+    // This runs AFTER noise updates
+        plotAll();
+    }, [noise]);
+
     useEffect(() => {
         
         plotAll();
@@ -81,18 +92,11 @@ export default function Page() {
     learnedSlopeVertical.color = "red";
     LinearRegressionSets.push(learnedSlopeVertical);
 
-    // msePrime
-
-    // learnedSlopeVertical.label = "Learned Slope Vertical";
-    
-
     function handleSlopeChange(value: number[]) {
         setSlope(value);
-        plotAll();
     }
     function handleNoiseChange(value: number[]) {
         setNoise(value);
-        plotAll();
     }
 
     function plotAll() {
@@ -158,6 +162,9 @@ export default function Page() {
     return (
         <div className=" md:w-3/4 mx-auto">
             <PageHeading title="Linear Regression" />
+            { orientation?.includes('portrait') ? 
+                 <p className="text-center">Pro Tip: Turn your phone sideways for this one.</p>: null
+                 }
             <div className="inline-grid grid-cols-12 gap-4 m-2">
                 { orientation?.includes('portrait') ? 
                  null: (

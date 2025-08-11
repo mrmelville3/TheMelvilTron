@@ -1,5 +1,7 @@
+'use client';
 import { GraphData } from "@/lib/types";
 import React from "react";
+import { useRef } from "react";
 
 interface GridProps  {
   xMin: number;
@@ -12,9 +14,22 @@ interface GridProps  {
 
 export default function MyGraph2({ xMin, xMax, yMin, yMax, graphDataSets, uid }: GridProps) {
 
+    
+    const animateOpacity = useRef<SVGAnimateElement | null>(null); //useRef(null);
+    const animateRadius = useRef<SVGAnimateElement | null>(null); //useRef(null);
+
     const xAxis = 50 - (100 * (0 - yMin) / (yMax - yMin));
     const yAxis = -50 + (100 * (0 - xMin) / (xMax - xMin));
     const legendFont = 4;
+
+    const triggerAnimation = () => {
+    if (animateOpacity.current) {
+        animateOpacity.current.beginElement();
+    }
+    if (animateRadius.current) {
+        animateRadius.current.beginElement();
+    }
+    };
 
     function moveX(x: number): number {
         return (100 * (x - xMin) / (xMax - xMin)) - 50;
@@ -37,7 +52,8 @@ export default function MyGraph2({ xMin, xMax, yMin, yMax, graphDataSets, uid }:
                 xmlns="http://www.w3.org/2000/svg"
                 width="100%"
                 height="100%"
-                preserveAspectRatio="xMidYMid meet">
+                preserveAspectRatio="xMidYMid meet"
+                onClick={triggerAnimation}>
                 <rect x="-50" y="-50" width="100" height="100" fill="green" /> 
                 <line x1={-50} y1={xAxis} x2={50} y2={xAxis} stroke="darkgray" strokeWidth="0.5" />
                 <line x1={yAxis} y1="-50" x2={yAxis} y2="50" stroke="darkgray" strokeWidth="0.5" />
@@ -68,19 +84,21 @@ export default function MyGraph2({ xMin, xMax, yMin, yMax, graphDataSets, uid }:
                 <rect x={-48} y={-46} width={46} height={legendFont*(graphDataSets.length+1)} fill="white" stroke="black" strokeWidth="0.1" />
                 : <circle cx={0} cy={0} r="1.0" fill="limegreen">
                     <animate
+                        ref={animateOpacity}
                         attributeName="opacity"
-                        begin="0s"
-                        dur="5s"
+                        begin="indefinite"
+                        dur="3s"
                         from="0.5"
                         to="0"
-                        repeatCount="indefinite" />
+                        repeatCount="1" />
                     <animate
+                        ref={animateRadius}
                         attributeName="r"
-                        begin="0s"
-                        dur="5s"
+                        begin="indefinite"
+                        dur="3s"
                         from="1"
                         to="100"
-                        repeatCount="indefinite" />
+                        repeatCount="1" />
                     </circle>
         }
                 {
