@@ -16,6 +16,9 @@ export default function NavBar() {
                     <li>
                         <Link href="/LinearRegressionII" className="text-gray-300 font-semibold hover:text-white">Linear Regression</Link>
                     </li>
+                    <li>
+                        <Link href="/ImageCompression" className="text-gray-300 font-semibold hover:text-white">Image Compression</Link>
+                    </li>
                 </ul>
         </nav>
     );
