@@ -1,6 +1,6 @@
 import PageHeading from "@/components/PageHeading";
 import MyGraph2 from "@/components/MyGraph2";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+// import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
 
 export default function Home() {

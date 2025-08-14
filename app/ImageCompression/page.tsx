@@ -1,5 +1,5 @@
 'use client';
-import ImageCanvas from '@/components/ImageCanvas';
+// import ImageCanvas from '@/components/ImageCanvas';
 import PageHeading from '@/components/PageHeading';
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
@@ -65,7 +65,7 @@ export default function Page() {
             const blue = [];
 
             for (let y = 0; y < height; y++) {
-                const row = [];
+                // const row = [];
                 const rRow = [];
                 const gRow = [];
                 const bRow = [];
@@ -138,6 +138,15 @@ export default function Page() {
         return numeric.dot(U_r, numeric.dot(S_r, numeric.transpose(V_r))) as number[][];
     }
 
+    function incrementRank() {
+        if(rank[0] < defaultWidth)
+        setRank([rank[0] + 1]);
+    }
+    function decrementRank() {
+        if (rank[0] > 1) {
+            setRank([rank[0] - 1]);
+        }
+    }
 
     return (
         <div>
@@ -147,22 +156,34 @@ export default function Page() {
             </p> */}
             {/* <img className="mx-auto" src="/images/KoalaBear200x200.jpg" alt="Koala Bear 200 x 200" /> */}
 
-            <div className="grid grid-cols-2 gap-4">
-                <canvas ref={originalCanvasRef} width={defaultWidth} height={defaultHeight} className="mx-auto my-4"></canvas>
-                <canvas ref={compressedCanvasRef} width={defaultWidth} height={defaultHeight} className="mx-auto my-4"></canvas>
+            <div className="grid grid-cols-2 gap-2">
+                <canvas 
+                    ref={originalCanvasRef} 
+                    width={defaultWidth} 
+                    height={defaultHeight} 
+                    className="my-4 justify-self-end" />
+                <canvas 
+                    ref={compressedCanvasRef} 
+                    width={defaultWidth} 
+                    height={defaultHeight} 
+                    className="my-4 justify-self-start" />
             </div>
-            <Label className="mb-2 justify-self-center">Rank</Label>
-            <Label className="mb-2 justify-self-center">{rank}</Label>
-            <Slider 
-                className="mb-4 w-1/2 mx-auto"
-                orientation="horizontal"
-                defaultValue={[defaultRank]} 
-                min={1} 
-                max={100} 
-                step={1} 
-                onValueChange={handleRankChange} 
-                value={rank}
-            />
+            <div className="grid grid-cols-3 gap-4">
+                <Label className="mb-2 justify-self-center col-span-3">Rank</Label>
+                <Label className="mb-2 justify-self-center col-span-3">{rank}</Label>
+                <Button onClick={decrementRank} className="col-span-1 w-10 justify-self-end">-</Button>
+                <Slider 
+                    className="mx-auto col-span-1"
+                    orientation="horizontal"
+                    defaultValue={[defaultRank]} 
+                    min={1} 
+                    max={defaultWidth} 
+                    step={1} 
+                    onValueChange={handleRankChange} 
+                    value={rank} />
+
+                <Button  onClick={incrementRank} className="col-span-1 w-10 justify-self-start">+</Button>
+            </div>
         </div>
     );
 }
