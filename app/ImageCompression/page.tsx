@@ -156,33 +156,33 @@ export default function Page() {
             </p> */}
             {/* <img className="mx-auto" src="/images/KoalaBear200x200.jpg" alt="Koala Bear 200 x 200" /> */}
 
-            <div className="grid grid-cols-2 gap-2">
-                <canvas 
-                    ref={originalCanvasRef} 
-                    width={defaultWidth} 
-                    height={defaultHeight} 
-                    className="my-4 justify-self-end" />
-                <canvas 
-                    ref={compressedCanvasRef} 
-                    width={defaultWidth} 
-                    height={defaultHeight} 
-                    className="my-4 justify-self-start" />
-            </div>
-            <div className="grid grid-cols-3 gap-4">
-                <Label className="mb-2 justify-self-center col-span-3">Rank</Label>
-                <Label className="mb-2 justify-self-center col-span-3">{rank}</Label>
-                <Button onClick={decrementRank} className="col-span-1 w-10 justify-self-end">-</Button>
-                <Slider 
-                    className="mx-auto col-span-1"
-                    orientation="horizontal"
-                    defaultValue={[defaultRank]} 
-                    min={1} 
-                    max={defaultWidth} 
-                    step={1} 
-                    onValueChange={handleRankChange} 
-                    value={rank} />
-
-                <Button  onClick={incrementRank} className="col-span-1 w-10 justify-self-start">+</Button>
+            <div className="grid">
+                <div className="grid grid-cols-2 gap-2">
+                    <canvas 
+                        ref={originalCanvasRef} 
+                        width={defaultWidth} 
+                        height={defaultHeight} 
+                        className="my-4 col-start-1 justify-self-end" />
+                    <canvas 
+                        ref={compressedCanvasRef} 
+                        width={defaultWidth} 
+                        height={defaultHeight} 
+                        className="my-4 col-start-2 justify-self-start" />
+                </div>
+                <div className="mx-auto"><Label>Rank {rank}</Label></div>
+                <div className="grid grid-cols-[auto_1fr_auto] gap-2 w-80 mx-auto">
+                    <Button onClick={decrementRank} className="col-start-1 w-10">-</Button>
+                    <Slider 
+                        className="col-start-2"
+                        orientation="horizontal"
+                        defaultValue={[defaultRank]} 
+                        min={1} 
+                        max={defaultWidth} 
+                        step={1} 
+                        onValueChange={handleRankChange} 
+                        value={rank} />
+                    <Button  onClick={incrementRank} className="col-start-3 w-10">+</Button>
+                </div>
             </div>
         </div>
     );
