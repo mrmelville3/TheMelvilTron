@@ -25,20 +25,20 @@ import { Button } from '@/components/ui/button';
     const defaultRank = 10;
     const defaultWidth = 200;
     const defaultHeight = 200;
+    // let compFileSize = Math.ceil(defaultRank * 3 * ( defaultWidth + defaultHeight + 1) / 1000); // in KB
 
 export default function Page() {
 
-
-
     const [rank, setRank] = useState([10]);
+    const [compFileSize, setCompFileSize] = useState(Math.ceil(defaultRank * 3 * ( defaultWidth + defaultHeight + 1) / 1000));
 
     const originalCanvasRef = useRef<HTMLCanvasElement>(null);
     const compressedCanvasRef = useRef<HTMLCanvasElement>(null);
 
 
     useEffect(() => {
-        // This runs AFTER rank updates
         console.log('use effect initial')
+
 
         const origCanvas = originalCanvasRef.current;
         if (!origCanvas) return;
@@ -99,6 +99,7 @@ export default function Page() {
         // This runs AFTER rank updates
         if(!svdDataRed) return;
         updateCompressedImage(rank[0]);
+        setCompFileSize(Math.ceil(rank[0] * 3 * ( defaultWidth + defaultHeight + 1) / 1000));
     }, [rank]);
 
     function handleRankChange(value: number[]) {
@@ -107,6 +108,7 @@ export default function Page() {
 
     function updateCompressedImage(r: number) {
         // Logic to update the compressed image based on the rank
+
 
         const compDataRed = reconstruct(svdDataRed.U, svdDataRed.S, svdDataRed.V, r);
         const compDataGreen = reconstruct(svdDataGreen.U, svdDataGreen.S, svdDataGreen.V, r);
@@ -150,26 +152,32 @@ export default function Page() {
 
     return (
         <div>
-            <PageHeading title="Image Compression with SVD" description="Image compression using Singular Value Decomposition (SVD)." />
+            <PageHeading title="Image Compression" description="with Singular Value Decomposition (SVD)" />
             {/* <p className="text-center mx-auto px-9 lg:w-1/2">
                 This page demonstrates image compression using Singular Value Decomposition (SVD). The original image is decomposed into its singular values and vectors, allowing us to reconstruct a lower-rank approximation of the image. Adjust the rank to see how it affects the quality and size of the compressed image.
             </p> */}
             {/* <img className="mx-auto" src="/images/KoalaBear200x200.jpg" alt="Koala Bear 200 x 200" /> */}
 
             <div className="grid">
-                <div className="grid grid-cols-2 gap-2">
-                    <canvas 
-                        ref={originalCanvasRef} 
-                        width={defaultWidth} 
-                        height={defaultHeight} 
-                        className="my-4 col-start-1 justify-self-end" />
-                    <canvas 
-                        ref={compressedCanvasRef} 
-                        width={defaultWidth} 
-                        height={defaultHeight} 
-                        className="my-4 col-start-2 justify-self-start" />
+                <div className="grid grid-cols-2 gap-2 my-4">
+                    <figure className="col-start-1 justify-self-end">
+                        <figcaption className="text-center">Original Image</figcaption>
+                        <canvas 
+                            ref={originalCanvasRef} 
+                            width={defaultWidth} 
+                            height={defaultHeight} />
+                        <figcaption className="text-center">File size 200KB</figcaption>
+                    </figure>
+                    <figure className="col-start-2 justify-self-start">
+                        <figcaption className="text-center">Compressed Image</figcaption>
+                        <canvas 
+                            ref={compressedCanvasRef} 
+                            width={defaultWidth} 
+                            height={defaultHeight} />
+                        <figcaption className={(compFileSize > 200)?"text-center text-red-500":"text-center"}>File size {compFileSize}KB</figcaption>
+                    </figure>
                 </div>
-                <div className="mx-auto"><Label>Rank {rank}</Label></div>
+                <div className="mx-auto my-2"><Label>Rank {rank}</Label></div>
                 <div className="grid grid-cols-[auto_1fr_auto] gap-2 w-80 mx-auto">
                     <Button onClick={decrementRank} className="col-start-1 w-10">-</Button>
                     <Slider 
