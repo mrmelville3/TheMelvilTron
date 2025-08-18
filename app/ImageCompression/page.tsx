@@ -7,6 +7,7 @@ import numeric from 'numeric';
 import { useState, useEffect, useRef } from 'react';
 import koalaImg from '../images/KoalaBear200x200.jpg';
 import { Button } from '@/components/ui/button';
+import SectionTitle from '@/components/SectionTitle';
 
 
     // let svdData = null; // store {U,S,V}
@@ -22,29 +23,41 @@ import { Button } from '@/components/ui/button';
 
     let width = 0;
     let height = 0;
-    const defaultRank = 10;
+    const defaultRank = 8;
     const defaultWidth = 200;
     const defaultHeight = 200;
-    // let compFileSize = Math.ceil(defaultRank * 3 * ( defaultWidth + defaultHeight + 1) / 1000); // in KB
+    const origFileSize =  3 * defaultWidth * defaultHeight / 1000; // in KB assuming 3 bytes per pixel (RGB)
 
 export default function Page() {
 
-    const [rank, setRank] = useState([10]);
+    const [rank, setRank] = useState([defaultRank]);
     const [compFileSize, setCompFileSize] = useState(Math.ceil(defaultRank * 3 * ( defaultWidth + defaultHeight + 1) / 1000));
 
     const originalCanvasRef = useRef<HTMLCanvasElement>(null);
     const compressedCanvasRef = useRef<HTMLCanvasElement>(null);
+    const compRedCanvasRef = useRef<HTMLCanvasElement>(null);
+    const compGreenCanvasRef = useRef<HTMLCanvasElement>(null);
+    const compBlueCanvasRef = useRef<HTMLCanvasElement>(null);  
+    const svdRedUCanvasRef = useRef<HTMLCanvasElement>(null);
+    const svdRedSCanvasRef = useRef<HTMLCanvasElement>(null);
+    const svdRedVtCanvasRef = useRef<HTMLCanvasElement>(null);
+    const svdGreenUCanvasRef = useRef<HTMLCanvasElement>(null);
+    const svdGreenSCanvasRef = useRef<HTMLCanvasElement>(null);
+    const svdGreenVtCanvasRef = useRef<HTMLCanvasElement>(null);
+    const svdBlueUCanvasRef = useRef<HTMLCanvasElement>(null);
+    const svdBlueSCanvasRef = useRef<HTMLCanvasElement>(null);
+    const svdBlueVtCanvasRef = useRef<HTMLCanvasElement>(null);
 
 
     useEffect(() => {
         console.log('use effect initial')
 
-
         const origCanvas = originalCanvasRef.current;
+
         if (!origCanvas) return;
         const origCtx = origCanvas.getContext("2d");
-        if (!origCtx) return;
 
+        if (! origCtx ) return;
         
         const image = new Image();
         image.src = koalaImg.src;
@@ -115,22 +128,123 @@ export default function Page() {
         const compDataBlue = reconstruct(svdDataBlue.U, svdDataBlue.S, svdDataBlue.V, r);
 
         const compCanvas = compressedCanvasRef.current;
-        if (!compCanvas) return;
+        const compRedCanvas =  compRedCanvasRef.current;
+        const compGreenCanvas =  compGreenCanvasRef.current;
+        const compBlueCanvas =  compBlueCanvasRef.current;
+        const svdRedUCanvas = svdRedUCanvasRef.current;
+        const svdRedSCanvas = svdRedSCanvasRef.current;
+        const svdRedVtCanvas = svdRedVtCanvasRef.current;
+        const svdGreenUCanvas = svdGreenUCanvasRef.current;
+        const svdGreenSCanvas = svdGreenSCanvasRef.current;
+        const svdGreenVtCanvas = svdGreenVtCanvasRef.current;
+        const svdBlueUCanvas = svdBlueUCanvasRef.current;
+        const svdBlueSCanvas = svdBlueSCanvasRef.current;
+        const svdBlueVtCanvas = svdBlueVtCanvasRef.current; 
+
+        const defaultPixelColor = 240;
+
+        if (! (compCanvas && 
+            compRedCanvas && compGreenCanvas && compBlueCanvas &&
+            svdRedUCanvas && svdRedSCanvas && svdRedVtCanvas &&
+            svdGreenUCanvas && svdGreenSCanvas && svdGreenVtCanvas &&
+            svdBlueUCanvas && svdBlueSCanvas && svdBlueVtCanvas
+        )) return;
+
         const ctx = compCanvas.getContext("2d");
-        if (!ctx) return;
+        const ctxRed = compRedCanvas.getContext("2d");
+        const ctxGreen = compGreenCanvas.getContext("2d");
+        const ctxBlue = compBlueCanvas.getContext("2d");
+        const svdRedUctx = svdRedUCanvas.getContext("2d");
+        const svdRedSctx = svdRedSCanvas.getContext("2d");
+        const svdRedVtctx = svdRedVtCanvas.getContext("2d");   
+        const svdGreenUctx = svdGreenUCanvas.getContext("2d");
+        const svdGreenSctx = svdGreenSCanvas.getContext("2d");
+        const svdGreenVtctx = svdGreenVtCanvas.getContext("2d");
+        const svdBlueUctx = svdBlueUCanvas.getContext("2d");
+        const svdBlueSctx = svdBlueSCanvas.getContext("2d");
+        const svdBlueVtctx = svdBlueVtCanvas.getContext("2d");
+
+        if (!(ctx && 
+            ctxRed && ctxGreen && ctxBlue &&
+            svdRedUctx && svdRedSctx && svdRedVtctx &&
+            svdGreenUctx && svdGreenSctx && svdGreenVtctx &&
+            svdBlueUctx && svdBlueSctx && svdBlueVtctx
+        )) return;
+
         const imageData = ctx.createImageData(width, height);
+        const imageDataRed = ctxRed.createImageData(width, height);
+        const imageDataGreen = ctxGreen.createImageData(width, height);
+        const imageDataBlue = ctxBlue.createImageData(width, height);
+        const imageDataSvdRedU = svdRedUctx.createImageData(width, height);
+        const imageDataSvdRedS = svdRedSctx.createImageData(width, height);
+        const imageDataSvdRedVt = svdRedVtctx.createImageData(width, height);
+        const imageDataSvdGreenU = svdGreenUctx.createImageData(width, height);
+        const imageDataSvdGreenS = svdGreenSctx.createImageData(width, height);
+        const imageDataSvdGreenVt = svdGreenVtctx.createImageData(width, height);
+        const imageDataSvdBlueU = svdBlueUctx.createImageData(width, height);
+        const imageDataSvdBlueS = svdBlueSctx.createImageData(width, height);
+        const imageDataSvdBlueVt = svdBlueVtctx.createImageData(width, height);
+
         for (let y = 0; y < height; y++) {
             for (let x = 0; x < width; x++) {
-            // const val = Math.max(0, Math.min(255, compData[y][x]));
-            const idx = (y * width + x) * 4;
-            imageData.data[idx] = compDataRed[y][x];     // R
-            imageData.data[idx + 1] = compDataGreen[y][x]; // G
-            imageData.data[idx + 2] = compDataBlue[y][x]; // B
-            
-            imageData.data[idx + 3] = 255; // Alpha
+                
+                const idx = (y * width + x) * 4;
+                imageDataRed.data[idx] = imageData.data[idx] = compDataRed[y][x];     // R
+                imageDataGreen.data[idx + 1] = imageData.data[idx + 1] = compDataGreen[y][x]; // G
+                imageDataBlue.data[idx + 2] = imageData.data[idx + 2] = compDataBlue[y][x]; // B
+                
+                imageDataRed.data[idx + 3] = imageDataGreen.data[idx + 3] = imageDataBlue.data[idx + 3] = imageData.data[idx + 3] = 255; // Alpha
+                imageDataSvdRedU.data[idx + 3] = imageDataSvdRedS.data[idx + 3] = imageDataSvdRedVt.data[idx + 3] = 255;
+                imageDataSvdGreenU.data[idx + 3] = imageDataSvdGreenS.data[idx + 3] = imageDataSvdGreenVt.data[idx + 3] = 255;
+                imageDataSvdBlueU.data[idx + 3] = imageDataSvdBlueS.data[idx + 3] = imageDataSvdBlueVt.data[idx + 3] = 255; 
+
+                imageDataSvdRedU.data[idx] = imageDataSvdRedU.data[idx + 1] = imageDataSvdRedU.data[idx + 2] = defaultPixelColor;
+                imageDataSvdRedS.data[idx] = imageDataSvdRedS.data[idx + 1] = imageDataSvdRedS.data[idx + 2] = defaultPixelColor;
+                imageDataSvdRedVt.data[idx] = imageDataSvdRedVt.data[idx + 1] = imageDataSvdRedVt.data[idx + 2] = defaultPixelColor;
+                imageDataSvdGreenU.data[idx] = imageDataSvdGreenU.data[idx + 1] = imageDataSvdGreenU.data[idx + 2] = defaultPixelColor;
+                imageDataSvdGreenS.data[idx] = imageDataSvdGreenS.data[idx + 1] = imageDataSvdGreenS.data[idx + 2] = defaultPixelColor;
+                imageDataSvdGreenVt.data[idx] = imageDataSvdGreenVt.data[idx + 1] = imageDataSvdGreenVt.data[idx + 2] = defaultPixelColor;
+                imageDataSvdBlueU.data[idx] = imageDataSvdBlueU.data[idx + 1] = imageDataSvdBlueU.data[idx + 2] = defaultPixelColor;
+                imageDataSvdBlueS.data[idx] = imageDataSvdBlueS.data[idx + 1] = imageDataSvdBlueS.data[idx + 2] = defaultPixelColor;
+                imageDataSvdBlueVt.data[idx] = imageDataSvdBlueVt.data[idx + 1] = imageDataSvdBlueVt.data[idx + 2] = defaultPixelColor;
+
+                // SVD matrices
+                if(y < r) {
+                    imageDataSvdRedVt.data[idx] = svdDataRed.V[x][y] * 1000; // R
+                    imageDataSvdGreenVt.data[idx + 1] = svdDataGreen.V[x][y] * 1000; // G
+                    imageDataSvdBlueVt.data[idx + 2] = svdDataBlue.V[x][y] * 1000; // B
+                    imageDataSvdRedVt.data[idx + 1] = imageDataSvdRedVt.data[idx + 2] = imageDataSvdGreenVt.data[idx] = imageDataSvdGreenVt.data[idx + 2] = imageDataSvdBlueVt.data[idx + 1] = imageDataSvdBlueVt.data[idx + 0] = 0;
+                }
+                if(x < r){
+                    imageDataSvdRedU.data[idx] = svdDataRed.U[y][x] * 1000; // R
+                    imageDataSvdGreenU.data[idx + 1] = svdDataGreen.U[y][x] * 1000; // G
+                    imageDataSvdBlueU.data[idx + 2] = svdDataBlue.U[y][x] * 1000; // B
+                    imageDataSvdRedU.data[idx + 1] = imageDataSvdRedU.data[idx + 2] = imageDataSvdGreenU.data[idx] = imageDataSvdGreenU.data[idx + 2] = imageDataSvdBlueU.data[idx + 1] = imageDataSvdBlueU.data[idx + 0] = 0;
+                }
+                if(y < r && x < r && x==y) {
+                    imageDataSvdRedS.data[idx] = svdDataRed.S[y] / 5; // R
+                    imageDataSvdGreenS.data[idx + 1] = svdDataGreen.S[y] / 5; // G
+                    imageDataSvdBlueS.data[idx + 2] = svdDataBlue.S[y] / 5; // B
+                    imageDataSvdRedS.data[idx + 1] = imageDataSvdRedS.data[idx + 2] = imageDataSvdGreenS.data[idx] = imageDataSvdGreenS.data[idx + 2] = imageDataSvdBlueS.data[idx + 1] = imageDataSvdBlueS.data[idx + 0] = 0;
+                    console.log(`SVD Red S value at (${y}, ${x}):`, imageDataSvdRedS.data[idx]);
+                    console.log('a few red pixels:', imageDataRed.data[idx]);
+
+                }   
             }
         }
         ctx.putImageData(imageData, 0, 0);
+        ctxRed.putImageData(imageDataRed, 0, 0);
+        ctxGreen.putImageData(imageDataGreen, 0, 0);
+        ctxBlue.putImageData(imageDataBlue, 0, 0);
+        svdRedUctx.putImageData(imageDataSvdRedU, 0, 0);
+        svdRedSctx.putImageData(imageDataSvdRedS, 0, 0);
+        svdRedVtctx.putImageData(imageDataSvdRedVt, 0, 0);
+        svdGreenUctx.putImageData(imageDataSvdGreenU, 0, 0);
+        svdGreenSctx.putImageData(imageDataSvdGreenS, 0, 0);
+        svdGreenVtctx.putImageData(imageDataSvdGreenVt, 0, 0);
+        svdBlueUctx.putImageData(imageDataSvdBlueU, 0, 0);
+        svdBlueSctx.putImageData(imageDataSvdBlueS, 0, 0);
+        svdBlueVtctx.putImageData(imageDataSvdBlueVt, 0, 0);
 
     }
     function reconstruct(U:number[][], S:number[], V:number[][], r:number): number[][] {
@@ -166,7 +280,7 @@ export default function Page() {
                             ref={originalCanvasRef} 
                             width={defaultWidth} 
                             height={defaultHeight} />
-                        <figcaption className="text-center">File size 200KB</figcaption>
+                        <figcaption className="text-center">{origFileSize}KB</figcaption>
                     </figure>
                     <figure className="col-start-2 justify-self-start">
                         <figcaption className="text-center">Compressed Image</figcaption>
@@ -174,7 +288,7 @@ export default function Page() {
                             ref={compressedCanvasRef} 
                             width={defaultWidth} 
                             height={defaultHeight} />
-                        <figcaption className={(compFileSize > 200)?"text-center text-red-500":"text-center"}>File size {compFileSize}KB</figcaption>
+                        <figcaption className={(compFileSize > origFileSize)?"text-center text-red-500":"text-center"}>{compFileSize}KB</figcaption>
                     </figure>
                 </div>
                 <div className="mx-auto my-2"><Label>Rank {rank}</Label></div>
@@ -191,7 +305,94 @@ export default function Page() {
                         value={rank} />
                     <Button  onClick={incrementRank} className="col-start-3 w-10">+</Button>
                 </div>
+                
             </div>
+                <div className="grid grid-cols-9 gap-2 my-4 justify-items-center items-center">
+                    <SectionTitle>Original</SectionTitle>
+                    <span></span>
+                    <SectionTitle>U</SectionTitle>
+                    <span></span>
+                    <SectionTitle>Sigma</SectionTitle>
+                    <span></span>
+                    <SectionTitle>V<sup>T</sup></SectionTitle>
+                    <span></span>
+                    <SectionTitle>Compressed</SectionTitle>
+                    <img src="/KoalaRed.png" alt="SVD Image Compression" />
+                    <SectionTitle>&gt;&gt;</SectionTitle>
+                    <canvas 
+                        className="w-full h-auto max-w-[200px] border-1 border-gray-400"
+                        ref={svdRedUCanvasRef} 
+                        width={defaultWidth} 
+                        height={defaultHeight} />
+                    <SectionTitle>X</SectionTitle>
+                    <canvas 
+                        className="w-full h-auto max-w-[200px] border-1 border-gray-400"
+                        ref={svdRedSCanvasRef} 
+                        width={defaultWidth} 
+                        height={defaultHeight} />
+                    <SectionTitle>X</SectionTitle>
+                    <canvas 
+                        className="w-full h-auto max-w-[200px] border-1 border-gray-400"
+                        ref={svdRedVtCanvasRef} 
+                        width={defaultWidth} 
+                        height={defaultHeight} />
+                    <SectionTitle>=</SectionTitle>
+                    <canvas 
+                        className="w-full h-auto max-w-[200px] border-1 border-gray-400"
+                        ref={compRedCanvasRef} 
+                        width={defaultWidth} 
+                        height={defaultHeight} />
+                    <img src="/KoalaGreen.png" alt="SVD Image Compression" />
+                    <SectionTitle>&gt;&gt;</SectionTitle>
+                    <canvas 
+                        className="w-full h-auto max-w-[200px] border-1 border-gray-400"
+                        ref={svdGreenUCanvasRef} 
+                        width={defaultWidth} 
+                        height={defaultHeight} />
+                    <SectionTitle>X</SectionTitle>
+                    <canvas 
+                        className="w-full h-auto max-w-[200px] border-1 border-gray-400"
+                        ref={svdGreenSCanvasRef} 
+                        width={defaultWidth} 
+                        height={defaultHeight} />
+                    <SectionTitle>X</SectionTitle>
+                    <canvas 
+                        className="w-full h-auto max-w-[200px] border-1 border-gray-400"
+                        ref={svdGreenVtCanvasRef} 
+                        width={defaultWidth} 
+                        height={defaultHeight} />
+                    <SectionTitle>=</SectionTitle>
+                    <canvas 
+                        className="w-full h-auto max-w-[200px] border-1 border-gray-400"
+                        ref={compGreenCanvasRef} 
+                        width={defaultWidth} 
+                        height={defaultHeight} />
+                    <img src="/KoalaBlue.png" alt="SVD Image Compression" />
+                    <SectionTitle>&gt;&gt;</SectionTitle>
+                    <canvas 
+                        className="w-full h-auto max-w-[200px] border-1 border-gray-400"
+                        ref={svdBlueUCanvasRef} 
+                        width={defaultWidth} 
+                        height={defaultHeight} />
+                    <SectionTitle>X</SectionTitle>
+                    <canvas 
+                        className="w-full h-auto max-w-[200px] border-1 border-gray-400"
+                        ref={svdBlueSCanvasRef} 
+                        width={defaultWidth} 
+                        height={defaultHeight} />
+                    <SectionTitle>X</SectionTitle>
+                    <canvas 
+                        className="w-full h-auto max-w-[200px] border-1 border-gray-400"
+                        ref={svdBlueVtCanvasRef} 
+                        width={defaultWidth} 
+                        height={defaultHeight} />
+                    <SectionTitle>=</SectionTitle>
+                    <canvas 
+                        className="w-full h-auto max-w-[200px] border-1 border-gray-400"
+                        ref={compBlueCanvasRef} 
+                        width={defaultWidth} 
+                        height={defaultHeight} />
+                </div>
         </div>
     );
 }
