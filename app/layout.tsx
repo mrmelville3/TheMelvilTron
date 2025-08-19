@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import NavBar from "@/components/NavBar";
+import MyGraph2 from "@/components/MyGraph2";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,6 +34,9 @@ export default function RootLayout({
       >
         <NavBar />
         {children}
+        <div className="w-1/3 sm:w-1/12 mx-auto my-4">
+          <MyGraph2 xMin={-50} xMax={50} yMin={-50} yMax={50} graphDataSets={[]} uid='1' />
+        </div>
       </body>
     </html>
   );

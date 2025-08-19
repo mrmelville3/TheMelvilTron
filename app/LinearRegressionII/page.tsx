@@ -7,6 +7,8 @@ import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import PageHeading from "@/components/PageHeading";
 import SectionHeading from "@/components/SectionHeading";
+import Paragraph from "@/components/Paragraph";
+import SectionTitle from "@/components/SectionTitle";
 
 export default function Page() {
 
@@ -241,18 +243,19 @@ export default function Page() {
                         value={noise} />
                 </div>
                 </>) : null}
-                <div className="col-span-12 my-4 py-4">
-                    <SectionHeading title="What's Going On Here?" description="Let's hit the slopes..."/>
-                    <div className="px-8 xl:px-24 font-bold">The basic idea (graph on the left):</div>
-                    <p className="px-8 py-2 xl:px-24">
-You (the user) set the blue true trend line using the first slider. You set the noise level of the green data points with second slider. The learning algorithm takes the green dots as input and is not aware of the blue line. The output of the learning algorithm is the red dashed line. This is the algorithm&#39;s best guess at what the blue line is. The value of &quot;learned Slope&quot; on the right should be close to &quot;True Slope&quot; on the left. It has also learned the trend line of the data so it “knows” where new data points should go.  </p>
-                    <div className="px-8 xl:px-24 font-bold">Let&#39;s get nerdy:</div>
-                    <p className="px-8 py-2 xl:px-24">
-Each green dot is a point with coordinates x and y. These points are the training data. The learning algorithm is designed around this notion: “If I am given x as input, then y is the correct output.” The algorithm takes this set of known x&#39;s and y&#39;s and finds the trend line slope that best approximates the linear trend of the training data. With the trend identified, we can predict a likely value of y for an x we&#39;ve never seen before. The machine learned!</p>
-                    <div className="px-8 xl:px-24 font-bold">Next level nerds only:</div>
-                    <p className="px-8 py-2 xl:px-24">
-The graph on the right reveals more detail on how the trend line is learned. The purple U-shaped graph is a parabola. It represents how far hypothetical trend lines are from the data points for a range of slopes. The formula for that graph is called mean squared error (MSE). The error is the smallest at the bottom of the U-shape graph where the slope is zero. The straight yellow line is the derivative of the MSE parabola. It is called MSE Prime in this example. If you set MSE Prime equal to zero and solve for x, you will have the estimated slope coefficient. That is the slope of the learned trend line.</p>
-            </div>
+            <SectionHeading title="What's Going On Here?" description="Let's hit the slopes..."/>
+            <SectionTitle>The basic idea (graph on the left)</SectionTitle>
+            <Paragraph>
+                You (the user) set the blue true trend line using the first slider. You set the noise level of the green data points with second slider. The learning algorithm takes the green dots as input and is not aware of the blue line. The output of the learning algorithm is the red dashed line. This is the algorithm&apos;s best guess at what the blue line is. The value of “Learned Slope” on the right should be close to “True Slope” on the left. It has also learned the trend line of the data so it “knows” where new data points should go.
+            </Paragraph>
+            <SectionTitle>Let&apos;s get nerdy</SectionTitle>
+            <Paragraph>
+                Each green dot is a point with coordinates x and y. These points are the training data. The learning algorithm is designed around this notion: “If I am given x as input, then y is the correct output.” The algorithm takes this set of known x&apos;s and y&apos;s and finds the trend line slope that best approximates the linear trend of the training data. With the trend identified, we can predict a likely value of y for an x we&apos;ve never seen before. The machine learned!
+            </Paragraph>
+            <SectionTitle>Next level nerds only</SectionTitle>
+            <Paragraph>
+                The graph on the right reveals more detail on how the trend line is learned. The purple U-shaped graph is a parabola. It represents how far hypothetical trend lines are from the data points for a range of slopes. The formula for that graph is called mean squared error (MSE). The error is the smallest at the bottom of the U-shape graph where the slope is zero. The straight yellow line is the derivative of the MSE parabola. It is called MSE Prime in this example. If you set MSE Prime equal to zero and solve for x, you will have the estimated slope coefficient. That is the slope of the learned trend line.
+            </Paragraph>
         </div>
     )
 

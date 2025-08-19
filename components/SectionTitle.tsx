@@ -1,11 +1,7 @@
-interface SectionTitleProps {
-  children: React.ReactNode;
-}
-
-export default function SectionTitle({ children }: SectionTitleProps) {
+export default function SectionTitle({ children }: { children: React.ReactNode } ) {
     return (
-     <div className="m-2">
-      <h1 className="text-center text-xl font-bold tracking-tight">{children}</h1>
+     <div  className="px-8 xl:px-24 font-bold">
+      <p className="text-lg font-bold tracking-tight">{children}</p>
     </div>
     );
 }

@@ -8,6 +8,9 @@ import { useState, useEffect, useRef } from 'react';
 import koalaImg from '../images/KoalaBear200x200.jpg';
 import { Button } from '@/components/ui/button';
 import SectionTitle from '@/components/SectionTitle';
+import ColumnHeader from '@/components/ColumnHeader';
+import Paragraph from '@/components/Paragraph';
+import SectionHeading from '@/components/SectionHeading';
 
 
     // let svdData = null; // store {U,S,V}
@@ -27,6 +30,7 @@ import SectionTitle from '@/components/SectionTitle';
     const defaultWidth = 200;
     const defaultHeight = 200;
     const origFileSize =  3 * defaultWidth * defaultHeight / 1000; // in KB assuming 3 bytes per pixel (RGB)
+    const defaultPixelColor = 240;
 
 export default function Page() {
 
@@ -141,8 +145,6 @@ export default function Page() {
         const svdBlueSCanvas = svdBlueSCanvasRef.current;
         const svdBlueVtCanvas = svdBlueVtCanvasRef.current; 
 
-        const defaultPixelColor = 240;
-
         if (! (compCanvas && 
             compRedCanvas && compGreenCanvas && compBlueCanvas &&
             svdRedUCanvas && svdRedSCanvas && svdRedVtCanvas &&
@@ -210,24 +212,24 @@ export default function Page() {
 
                 // SVD matrices
                 if(y < r) {
-                    imageDataSvdRedVt.data[idx] = svdDataRed.V[x][y] * 1000; // R
-                    imageDataSvdGreenVt.data[idx + 1] = svdDataGreen.V[x][y] * 1000; // G
-                    imageDataSvdBlueVt.data[idx + 2] = svdDataBlue.V[x][y] * 1000; // B
+                    imageDataSvdRedVt.data[idx] = svdDataRed.V[x][y] * 2000; // R
+                    imageDataSvdGreenVt.data[idx + 1] = svdDataGreen.V[x][y] * 2000; // G
+                    imageDataSvdBlueVt.data[idx + 2] = svdDataBlue.V[x][y] * 2000; // B
                     imageDataSvdRedVt.data[idx + 1] = imageDataSvdRedVt.data[idx + 2] = imageDataSvdGreenVt.data[idx] = imageDataSvdGreenVt.data[idx + 2] = imageDataSvdBlueVt.data[idx + 1] = imageDataSvdBlueVt.data[idx + 0] = 0;
                 }
                 if(x < r){
-                    imageDataSvdRedU.data[idx] = svdDataRed.U[y][x] * 1000; // R
-                    imageDataSvdGreenU.data[idx + 1] = svdDataGreen.U[y][x] * 1000; // G
-                    imageDataSvdBlueU.data[idx + 2] = svdDataBlue.U[y][x] * 1000; // B
+                    imageDataSvdRedU.data[idx] = svdDataRed.U[y][x] * 2000; // R
+                    imageDataSvdGreenU.data[idx + 1] = svdDataGreen.U[y][x] * 2000; // G
+                    imageDataSvdBlueU.data[idx + 2] = svdDataBlue.U[y][x] * 2000; // B
                     imageDataSvdRedU.data[idx + 1] = imageDataSvdRedU.data[idx + 2] = imageDataSvdGreenU.data[idx] = imageDataSvdGreenU.data[idx + 2] = imageDataSvdBlueU.data[idx + 1] = imageDataSvdBlueU.data[idx + 0] = 0;
                 }
                 if(y < r && x < r && x==y) {
-                    imageDataSvdRedS.data[idx] = svdDataRed.S[y] / 5; // R
-                    imageDataSvdGreenS.data[idx + 1] = svdDataGreen.S[y] / 5; // G
-                    imageDataSvdBlueS.data[idx + 2] = svdDataBlue.S[y] / 5; // B
+                    imageDataSvdRedS.data[idx] = svdDataRed.S[y] / 4; // R
+                    imageDataSvdGreenS.data[idx + 1] = svdDataGreen.S[y] / 4; // G
+                    imageDataSvdBlueS.data[idx + 2] = svdDataBlue.S[y] / 4; // B
                     imageDataSvdRedS.data[idx + 1] = imageDataSvdRedS.data[idx + 2] = imageDataSvdGreenS.data[idx] = imageDataSvdGreenS.data[idx + 2] = imageDataSvdBlueS.data[idx + 1] = imageDataSvdBlueS.data[idx + 0] = 0;
-                    console.log(`SVD Red S value at (${y}, ${x}):`, imageDataSvdRedS.data[idx]);
-                    console.log('a few red pixels:', imageDataRed.data[idx]);
+                    // console.log(`SVD Red S value at (${y}, ${x}):`, imageDataSvdRedS.data[idx]);
+                    // console.log('a few red pixels:', imageDataRed.data[idx]);
 
                 }   
             }
@@ -273,22 +275,24 @@ export default function Page() {
             {/* <img className="mx-auto" src="/images/KoalaBear200x200.jpg" alt="Koala Bear 200 x 200" /> */}
 
             <div className="grid">
-                <div className="grid grid-cols-2 gap-2 my-4">
-                    <figure className="col-start-1 justify-self-end">
+                <div className="grid grid-cols-[1fr_1fr] gap-1 sm:gap-2 my-4 mx-auto justify-items-center items-center">
+                    <figure>
                         <figcaption className="text-center">Original Image</figcaption>
                         <canvas 
+                            className="w-full h-auto max-w-[200px]"
                             ref={originalCanvasRef} 
                             width={defaultWidth} 
                             height={defaultHeight} />
                         <figcaption className="text-center">{origFileSize}KB</figcaption>
                     </figure>
-                    <figure className="col-start-2 justify-self-start">
+                    <figure>
                         <figcaption className="text-center">Compressed Image</figcaption>
                         <canvas 
+                            className="w-full h-auto max-w-[200px]"
                             ref={compressedCanvasRef} 
                             width={defaultWidth} 
                             height={defaultHeight} />
-                        <figcaption className={(compFileSize > origFileSize)?"text-center text-red-500":"text-center"}>{compFileSize}KB</figcaption>
+                        <figcaption className={(compFileSize > origFileSize)?"text-center text-red-500":"text-center"}>{compFileSize}KB {(compFileSize > origFileSize)?"Too big!":""}</figcaption>
                     </figure>
                 </div>
                 <div className="mx-auto my-2"><Label>Rank {rank}</Label></div>
@@ -307,92 +311,102 @@ export default function Page() {
                 </div>
                 
             </div>
-                <div className="grid grid-cols-9 gap-2 my-4 justify-items-center items-center">
-                    <SectionTitle>Original</SectionTitle>
-                    <span></span>
-                    <SectionTitle>U</SectionTitle>
-                    <span></span>
-                    <SectionTitle>Sigma</SectionTitle>
-                    <span></span>
-                    <SectionTitle>V<sup>T</sup></SectionTitle>
-                    <span></span>
-                    <SectionTitle>Compressed</SectionTitle>
-                    <img src="/KoalaRed.png" alt="SVD Image Compression" />
-                    <SectionTitle>&gt;&gt;</SectionTitle>
-                    <canvas 
-                        className="w-full h-auto max-w-[200px] border-1 border-gray-400"
-                        ref={svdRedUCanvasRef} 
-                        width={defaultWidth} 
-                        height={defaultHeight} />
-                    <SectionTitle>X</SectionTitle>
-                    <canvas 
-                        className="w-full h-auto max-w-[200px] border-1 border-gray-400"
-                        ref={svdRedSCanvasRef} 
-                        width={defaultWidth} 
-                        height={defaultHeight} />
-                    <SectionTitle>X</SectionTitle>
-                    <canvas 
-                        className="w-full h-auto max-w-[200px] border-1 border-gray-400"
-                        ref={svdRedVtCanvasRef} 
-                        width={defaultWidth} 
-                        height={defaultHeight} />
-                    <SectionTitle>=</SectionTitle>
-                    <canvas 
-                        className="w-full h-auto max-w-[200px] border-1 border-gray-400"
-                        ref={compRedCanvasRef} 
-                        width={defaultWidth} 
-                        height={defaultHeight} />
-                    <img src="/KoalaGreen.png" alt="SVD Image Compression" />
-                    <SectionTitle>&gt;&gt;</SectionTitle>
-                    <canvas 
-                        className="w-full h-auto max-w-[200px] border-1 border-gray-400"
-                        ref={svdGreenUCanvasRef} 
-                        width={defaultWidth} 
-                        height={defaultHeight} />
-                    <SectionTitle>X</SectionTitle>
-                    <canvas 
-                        className="w-full h-auto max-w-[200px] border-1 border-gray-400"
-                        ref={svdGreenSCanvasRef} 
-                        width={defaultWidth} 
-                        height={defaultHeight} />
-                    <SectionTitle>X</SectionTitle>
-                    <canvas 
-                        className="w-full h-auto max-w-[200px] border-1 border-gray-400"
-                        ref={svdGreenVtCanvasRef} 
-                        width={defaultWidth} 
-                        height={defaultHeight} />
-                    <SectionTitle>=</SectionTitle>
-                    <canvas 
-                        className="w-full h-auto max-w-[200px] border-1 border-gray-400"
-                        ref={compGreenCanvasRef} 
-                        width={defaultWidth} 
-                        height={defaultHeight} />
-                    <img src="/KoalaBlue.png" alt="SVD Image Compression" />
-                    <SectionTitle>&gt;&gt;</SectionTitle>
-                    <canvas 
-                        className="w-full h-auto max-w-[200px] border-1 border-gray-400"
-                        ref={svdBlueUCanvasRef} 
-                        width={defaultWidth} 
-                        height={defaultHeight} />
-                    <SectionTitle>X</SectionTitle>
-                    <canvas 
-                        className="w-full h-auto max-w-[200px] border-1 border-gray-400"
-                        ref={svdBlueSCanvasRef} 
-                        width={defaultWidth} 
-                        height={defaultHeight} />
-                    <SectionTitle>X</SectionTitle>
-                    <canvas 
-                        className="w-full h-auto max-w-[200px] border-1 border-gray-400"
-                        ref={svdBlueVtCanvasRef} 
-                        width={defaultWidth} 
-                        height={defaultHeight} />
-                    <SectionTitle>=</SectionTitle>
-                    <canvas 
-                        className="w-full h-auto max-w-[200px] border-1 border-gray-400"
-                        ref={compBlueCanvasRef} 
-                        width={defaultWidth} 
-                        height={defaultHeight} />
-                </div>
+            <div className="grid grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr_auto_1fr] gap-1 sm:gap-2 my-4 justify-items-center items-center mb-6 max-w-[1200px] mx-auto">
+                <div className="whitespace-nowrap overflow-visible min-w-0 ">Original</div>
+                <span></span>
+                <div className="whitespace-nowrap overflow-visible min-w-0 ">U</div>
+                <span></span>
+                <div className="whitespace-nowrap overflow-visible min-w-0 ">Σ</div>
+                <span></span>
+                <div className="whitespace-nowrap overflow-visible min-w-0 ">V<sup>T</sup></div>
+                <span></span>
+                <div className="whitespace-nowrap overflow-visible min-w-0 ">Compressed</div>
+                <img src="/KoalaRed.png" alt="SVD Image Compression" />
+                <div className="border-1 border-gray-400 px-1 text-xs sm:text-lg"><div>S</div><div>V</div><div>D</div></div>
+                <canvas 
+                    className="w-full h-auto max-w-[200px] border-1 border-gray-400"
+                    ref={svdRedUCanvasRef} 
+                    width={defaultWidth} 
+                    height={defaultHeight} />
+                <span>x</span>
+                <canvas 
+                    className="w-full h-auto max-w-[200px] border-1 border-gray-400"
+                    ref={svdRedSCanvasRef} 
+                    width={defaultWidth} 
+                    height={defaultHeight} />
+                <span>x</span>
+                <canvas 
+                    className="w-full h-auto max-w-[200px] border-1 border-gray-400"
+                    ref={svdRedVtCanvasRef} 
+                    width={defaultWidth} 
+                    height={defaultHeight} />
+                <span>=</span>
+                <canvas 
+                    className="w-full h-auto max-w-[200px] border-1 border-gray-400"
+                    ref={compRedCanvasRef} 
+                    width={defaultWidth} 
+                    height={defaultHeight} />
+                <img src="/KoalaGreen.png" alt="SVD Image Compression" />
+                <div className="border-1 border-gray-400 px-1 text-xs sm:text-lg"><div>S</div><div>V</div><div>D</div></div>
+                <canvas 
+                    className="w-full h-auto max-w-[200px] border-1 border-gray-400"
+                    ref={svdGreenUCanvasRef} 
+                    width={defaultWidth} 
+                    height={defaultHeight} />
+                <span>x</span>
+                <canvas 
+                    className="w-full h-auto max-w-[200px] border-1 border-gray-400"
+                    ref={svdGreenSCanvasRef} 
+                    width={defaultWidth} 
+                    height={defaultHeight} />
+                <span>x</span>
+                <canvas 
+                    className="w-full h-auto max-w-[200px] border-1 border-gray-400"
+                    ref={svdGreenVtCanvasRef} 
+                    width={defaultWidth} 
+                    height={defaultHeight} />
+                <span>=</span>
+                <canvas 
+                    className="w-full h-auto max-w-[200px] border-1 border-gray-400"
+                    ref={compGreenCanvasRef} 
+                    width={defaultWidth} 
+                    height={defaultHeight} />
+                <img src="/KoalaBlue.png" alt="SVD Image Compression" />
+                <div className="border-1 border-gray-400 px-1 text-xs sm:text-lg"><div>S</div><div>V</div><div>D</div></div>
+                <canvas 
+                    className="w-full h-auto max-w-[200px] border-1 border-gray-400"
+                    ref={svdBlueUCanvasRef} 
+                    width={defaultWidth} 
+                    height={defaultHeight} />
+                <span>x</span>
+                <canvas 
+                    className="w-full h-auto max-w-[200px] border-1 border-gray-400"
+                    ref={svdBlueSCanvasRef} 
+                    width={defaultWidth} 
+                    height={defaultHeight} />
+                <span>x</span>
+                <canvas 
+                    className="w-full h-auto max-w-[200px] border-1 border-gray-400"
+                    ref={svdBlueVtCanvasRef} 
+                    width={defaultWidth} 
+                    height={defaultHeight} />
+                <span>=</span>
+                <canvas 
+                    className="w-full h-auto max-w-[200px] border-1 border-gray-400"
+                    ref={compBlueCanvasRef} 
+                    width={defaultWidth} 
+                    height={defaultHeight} />
+            </div>
+            <SectionHeading title="Singular Value Decomposition (SVD)"></SectionHeading>
+            <Paragraph>
+                Singular Value Decomposition (SVD) is one of the tools used in some artificial intelligence applications. It is a mathematical operation that takes a matrix as input and produces three new matrices as output. The mathematics behind it is PhD-level stuff that is beyond the scope of this web page. Using SVD for image compression is a visual way to demonstrate some of the key concepts. With SVD you can rebuild the original image to an acceptable degree using only parts of the three output matrices due their special properties.
+            </Paragraph>
+            <Paragraph>
+                The original image can be separated into three matrices red, green, and blue. The SVD algorithm is applied to each resulting in U, Sigma (Σ), and V transposed (V<sup>T</sup>) matrices. You decide how much of those matrices are used to rebuild the image using the slider or the plus/minus buttons.
+            </Paragraph>
+            <Paragraph>
+                The U, Σ, and V<sup>T</sup> matrices are visually depicted in this example but they are not images. They are storing raw data from the original image. The area that changes when using the slider is used to rebuild the compressed image.
+            </Paragraph>
         </div>
     );
 }
