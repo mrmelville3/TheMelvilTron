@@ -275,54 +275,39 @@ export default function Page() {
             {/* <img className="mx-auto" src="/images/KoalaBear200x200.jpg" alt="Koala Bear 200 x 200" /> */}
 
             <div className="grid">
-                <div className="grid grid-cols-[1fr_1fr] gap-1 sm:gap-2 my-4 mx-auto justify-items-center items-center">
-                    <figure>
-                        <figcaption className="text-center">Original Image</figcaption>
+                <div className="grid grid-cols-[1fr_1fr] gap-1 sm:gap-2 xs:my-4 sm:my-0 md:my-4 mx-auto sm:max-w-1/4 md:max-w-1/6">
+                    <div className="text-center whitespace-nowrap overflow-visible min-w-0">
+                        <div>Original</div>
                         <canvas 
                             className="w-full h-auto max-w-[200px]"
                             ref={originalCanvasRef} 
                             width={defaultWidth} 
                             height={defaultHeight} />
-                        <figcaption className="text-center">{origFileSize}KB</figcaption>
-                    </figure>
-                    <figure>
-                        <figcaption className="text-center">Compressed Image</figcaption>
+                        <div>{origFileSize}KB</div>
+                    </div>
+                    <div className="text-center whitespace-nowrap overflow-visible min-w-0">
+                        <div>Compressed</div>
                         <canvas 
                             className="w-full h-auto max-w-[200px]"
                             ref={compressedCanvasRef} 
                             width={defaultWidth} 
                             height={defaultHeight} />
-                        <figcaption className={(compFileSize > origFileSize)?"text-center text-red-500":"text-center"}>{compFileSize}KB {(compFileSize > origFileSize)?"Too big!":""}</figcaption>
-                    </figure>
+                        <div className={(compFileSize > origFileSize)?"text-center text-red-500":"text-center"}>{compFileSize}KB {(compFileSize > origFileSize)?"Too big!":""}</div>
+                    </div>
                 </div>
-                <div className="mx-auto my-2"><Label>Rank {rank}</Label></div>
-                <div className="grid grid-cols-[auto_1fr_auto] gap-2 w-80 mx-auto">
-                    <Button onClick={decrementRank} className="col-start-1 w-10">-</Button>
-                    <Slider 
-                        className="col-start-2"
-                        orientation="horizontal"
-                        defaultValue={[defaultRank]} 
-                        min={1} 
-                        max={defaultWidth} 
-                        step={1} 
-                        onValueChange={handleRankChange} 
-                        value={rank} />
-                    <Button  onClick={incrementRank} className="col-start-3 w-10">+</Button>
-                </div>
-                
             </div>
-            <div className="grid grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr_auto_1fr] gap-1 sm:gap-2 my-4 justify-items-center items-center mb-6 max-w-[1200px] mx-auto">
-                <div className="whitespace-nowrap overflow-visible min-w-0 ">Original</div>
+            <div className="grid grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr_auto_1fr] gap-1 md:gap-2 my-6 sm:my-0 md:my-4 justify-items-center items-center mb-6 sm:max-w-1/2 md:max-w-2/5 mx-auto">
+                <div className="whitespace-nowrap overflow-visible min-w-0">Original</div>
                 <span></span>
-                <div className="whitespace-nowrap overflow-visible min-w-0 ">U</div>
+                <div className="whitespace-nowrap overflow-visible min-w-0">U</div>
                 <span></span>
-                <div className="whitespace-nowrap overflow-visible min-w-0 ">Σ</div>
+                <div className="whitespace-nowrap overflow-visible min-w-0">Σ</div>
                 <span></span>
-                <div className="whitespace-nowrap overflow-visible min-w-0 ">V<sup>T</sup></div>
+                <div className="whitespace-nowrap overflow-visible min-w-0">V<sup>T</sup></div>
                 <span></span>
-                <div className="whitespace-nowrap overflow-visible min-w-0 ">Compressed</div>
+                <div className="whitespace-nowrap overflow-visible min-w-0">Compressed</div>
                 <img src="/KoalaRed.png" alt="SVD Image Compression" />
-                <div className="border-1 border-gray-400 px-1 text-xs sm:text-lg"><div>S</div><div>V</div><div>D</div></div>
+                <div className="border-1 border-gray-400 px-1 text-xs lg:text-lg"><div>S</div><div>V</div><div>D</div></div>
                 <canvas 
                     className="w-full h-auto max-w-[200px] border-1 border-gray-400"
                     ref={svdRedUCanvasRef} 
@@ -347,7 +332,7 @@ export default function Page() {
                     width={defaultWidth} 
                     height={defaultHeight} />
                 <img src="/KoalaGreen.png" alt="SVD Image Compression" />
-                <div className="border-1 border-gray-400 px-1 text-xs sm:text-lg"><div>S</div><div>V</div><div>D</div></div>
+                <div className="border-1 border-gray-400 px-1 text-xs lg:text-lg"><div>S</div><div>V</div><div>D</div></div>
                 <canvas 
                     className="w-full h-auto max-w-[200px] border-1 border-gray-400"
                     ref={svdGreenUCanvasRef} 
@@ -372,7 +357,7 @@ export default function Page() {
                     width={defaultWidth} 
                     height={defaultHeight} />
                 <img src="/KoalaBlue.png" alt="SVD Image Compression" />
-                <div className="border-1 border-gray-400 px-1 text-xs sm:text-lg"><div>S</div><div>V</div><div>D</div></div>
+                <div className="border-1 border-gray-400 px-1 text-xs lg:text-lg"><div>S</div><div>V</div><div>D</div></div>
                 <canvas 
                     className="w-full h-auto max-w-[200px] border-1 border-gray-400"
                     ref={svdBlueUCanvasRef} 
@@ -396,6 +381,22 @@ export default function Page() {
                     ref={compBlueCanvasRef} 
                     width={defaultWidth} 
                     height={defaultHeight} />
+            </div>
+            <div className="mx-auto w-fit p-2 bg-white z-10">
+                <div className="mx-auto text-center">Rank {rank}</div>
+                <div className="grid grid-cols-[auto_1fr_auto] gap-2 w-80 mx-auto">
+                    <Button onClick={decrementRank} className="col-start-1 w-10">-</Button>
+                    <Slider 
+                        className="col-start-2"
+                        orientation="horizontal"
+                        defaultValue={[defaultRank]} 
+                        min={1} 
+                        max={defaultWidth} 
+                        step={1} 
+                        onValueChange={handleRankChange} 
+                        value={rank} />
+                    <Button  onClick={incrementRank} className="col-start-3 w-10">+</Button>
+                </div>
             </div>
             <SectionHeading title="Singular Value Decomposition (SVD)"></SectionHeading>
             <Paragraph>

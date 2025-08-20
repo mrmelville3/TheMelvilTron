@@ -8,7 +8,7 @@ export default function NavBar() {
                     The<span className="text-green-400">Melvi</span>Tron
                 </div>
             </div>
-            
+            <div>
                 <ul className="flex space-x-4">
                     <li>
                         <Link href="/" className="text-gray-300 font-semibold hover:text-white">Home</Link>
@@ -20,6 +20,7 @@ export default function NavBar() {
                         <Link href="/ImageCompression" className="text-gray-300 font-semibold hover:text-white">SVD</Link>
                     </li>
                 </ul>
+            </div>
         </nav>
     );
 }
