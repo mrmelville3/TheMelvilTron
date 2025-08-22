@@ -164,9 +164,6 @@ export default function Page() {
     return (
         <div className=" md:w-3/4 mx-auto">
             <PageHeading title="Linear Regression" />
-            { orientation?.includes('portrait') ? 
-                 <p className="text-center">Pro Tip: Turn your phone sideways for this one.</p>: null
-                 }
             <div className="inline-grid grid-cols-12 gap-4 m-2">
                 { orientation?.includes('portrait') ? 
                  null: (
