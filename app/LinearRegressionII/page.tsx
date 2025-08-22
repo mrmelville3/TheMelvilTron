@@ -244,17 +244,20 @@ export default function Page() {
                 </div>
                 </>) : null}
             <SectionHeading title="What's Going On Here?" description="Let's hit the slopes..."/>
-            <SectionTitle>The basic idea (graph on the left)</SectionTitle>
+            <SectionTitle>The Basic Idea</SectionTitle>
             <Paragraph>
-                You (the user) set the blue true trend line using the first slider. You set the noise level of the green data points with second slider. The learning algorithm takes the green dots as input and is not aware of the blue line. The output of the learning algorithm is the red dashed line. This is the algorithm&apos;s best guess at what the blue line is. The value of “Learned Slope” on the right should be close to “True Slope” on the left. It has also learned the trend line of the data so it “knows” where new data points should go.
+                Linear regression is a simple form of machine learning. It is a mathematical algorithm that processes a set of data points and determines the best possible trend line among the data points. In this example the green dots in the graph on the left are the data points. The red dashed line is the learned trend line identified by the algorithm. As you change the true slope and noise level using the sliders, the data set changes and the learned trend line is recalculated on the fly.
             </Paragraph>
-            <SectionTitle>Let&apos;s get nerdy</SectionTitle>
+            <SectionTitle>What is Learned</SectionTitle>
             <Paragraph>
-                Each green dot is a point with coordinates x and y. These points are the training data. The learning algorithm is designed around this notion: “If I am given x as input, then y is the correct output.” The algorithm takes this set of known x&apos;s and y&apos;s and finds the trend line slope that best approximates the linear trend of the training data. With the trend identified, we can predict a likely value of y for an x we&apos;ve never seen before. The machine learned!
+                Each green dot is a point with coordinates x and y. These points are the training data. The learning algorithm is designed around this notion: “If I am given x as input, then y is the correct output.” The algorithm takes this set of known x&apos;s and y&apos;s and finds the trend line slope that best approximates the linear trend of the training data. With the trend identified, we can predict a likely value of y for an x we&apos;ve never seen before. This is how the machine applies what it learned.
             </Paragraph>
-            <SectionTitle>Next level nerds only</SectionTitle>
+            <SectionTitle>How it Learns</SectionTitle>
             <Paragraph>
-                The graph on the right reveals more detail on how the trend line is learned. The purple U-shaped graph is a parabola. It represents how far hypothetical trend lines are from the data points for a range of slopes. The formula for that graph is called mean squared error (MSE). The error is the smallest at the bottom of the U-shape graph where the slope is zero. The straight yellow line is the derivative of the MSE parabola. It is called MSE Prime in this example. If you set MSE Prime equal to zero and solve for x, you will have the estimated slope coefficient. That is the slope of the learned trend line.
+                The graph on the right reveals more detail about how the trend line is learned. For each set of green data points, a range of hypothetical slopes is considered and represented along the x axis. For each hypothetical slope an error is calculated using the mean squared error (MSE) formula borrowed from the field of statistics. This error is along the y axis and it is a measurement of how far off all of the data points are from the hypothetical trend line. The vertex of the U-shaped parabola is the point where the error is the least. The x coordinate at the vertex is the best guess at the slope of the trend line. This is known as the estimated slope coefficient.
+            </Paragraph>
+            <Paragraph>
+                From calculus, we know that the slope at the vertex of a parabola is zero. So we take the derivative of the MSE function, set it to zero, and solve for x. The derivative of MSE is the straight yellow line labeled MSE Prime in this example.
             </Paragraph>
         </div>
     )

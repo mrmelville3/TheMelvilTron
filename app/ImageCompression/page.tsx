@@ -400,13 +400,13 @@ export default function Page() {
             </div>
             <SectionHeading title="Singular Value Decomposition (SVD)"></SectionHeading>
             <Paragraph>
-                Singular Value Decomposition (SVD) is one of the tools used in some artificial intelligence applications. It is a mathematical operation that takes a matrix as input and produces three new matrices as output. The mathematics behind it is PhD-level stuff that is beyond the scope of this web page. Using SVD for image compression is a visual way to demonstrate some of the key concepts. With SVD you can rebuild the original image to an acceptable degree using only parts of the three output matrices due their special properties.
+                Singular Value Decomposition (SVD) is one of the tools used in some artificial intelligence applications. It is a mathematical operation that takes a 2D matrix as input and produces three new matrices as output. These matrices are called U, Sigma (Σ), and V transposed (V<sup>T</sup>) and they have unique and valuable properties. The values of the original matrix are distributed and reorganized across the three new matrices such that the first few columns of U and the first few rows of V<sup>T</sup> contain most of the information from the original matrix. Likewise, the latter columns of U and latter rows of V<sup>T</sup> add little to no value when reconstructing the original matrix and can be left out altogether in many cases.
             </Paragraph>
             <Paragraph>
-                The original image can be separated into three matrices red, green, and blue. The SVD algorithm is applied to each resulting in U, Sigma (Σ), and V transposed (V<sup>T</sup>) matrices. You decide how much of those matrices are used to rebuild the image using the slider or the plus/minus buttons.
+                Image compression is a way to visually illustrate key concepts of SVD. The original image is not a 2D matrix, but it can be separated into 2D matrices for colors red, green, and blue. SVD is applied to each of them producing U, Σ, and V<sup>T</sup> for each color. Using the slider and plus/minus buttons you can set how much of U, Σ, and V<sup>T</sup> are used to reconstruct the image. The image is reconstructed by performing standard matrix multiplication on the parts of U, Σ, and V<sup>T</sup> matrices included by the slider. However, if you include too much of these matrices, the size of the data needed to rebuild the image exceeds the size of the original image, and we have not achieved compression at all.
             </Paragraph>
             <Paragraph>
-                The U, Σ, and V<sup>T</sup> matrices are visually depicted in this example but they are not images. They are storing raw data from the original image. The area that changes when using the slider is used to rebuild the compressed image.
+                The U, Σ, and V<sup>T</sup> matrices are visually depicted in this example but they are not images. They are storing raw data from the original image.
             </Paragraph>
         </div>
     );
