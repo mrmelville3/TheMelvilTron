@@ -19,9 +19,9 @@ export default function NavBar() {
                     <li>
                         <Link href="/ImageCompression" className="text-gray-300 font-semibold hover:text-white">SVD</Link>
                     </li>
-                    <li>
+                    {/* <li>
                         <Link href="/RockPaperScissors" className="text-gray-300 font-semibold hover:text-white">RPS</Link>
-                    </li>
+                    </li> */}
                 </ul>
             </div>
         </nav>
